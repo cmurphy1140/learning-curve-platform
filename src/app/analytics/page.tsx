@@ -71,82 +71,54 @@ export default function AnalyticsPage() {
     weeklyTime: 0
   })
   
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  // Load analytics data from database
+  // Load analytics data from localStorage
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        setLoading(true)
-        
-        // Fetch sessions from API
-        const sessionsResponse = await fetch('/api/analytics/sessions?userId=anonymous&days=30')
-        const sessionsData = await sessionsResponse.json()
-        
-        // Fetch progress from API
-        const progressResponse = await fetch('/api/analytics/progress?userId=anonymous')
-        const progressData = await progressResponse.json()
-        
-        if (sessionsData.success && progressData.success) {
-          const sessions = sessionsData.sessions || []
-          
-          // If no sessions exist, create a demo session
-          if (sessions.length === 0) {
-            // Create initial demo session
-            await fetch('/api/analytics/sessions', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: 'anonymous',
-                duration: 45,
-                technology: 'javascript',
-                modulesCompleted: [],
-                xpGained: 100,
-                date: new Date().toISOString()
-              })
-            })
-            
-            // Refetch after creating demo session
-            const newSessionsResponse = await fetch('/api/analytics/sessions?userId=anonymous&days=30')
-            const newSessionsData = await newSessionsResponse.json()
-            sessions.push(...(newSessionsData.sessions || []))
-          }
-          
-          // Calculate metrics
-          const streak = {
-            current: progressData.progress.currentStreak || 0,
-            longest: progressData.progress.longestStreak || 0,
-            lastActiveDate: progressData.progress.lastActiveDate || new Date().toISOString()
-          }
-          
-          const skills = calculateSkillProficiency()
-          const { totalTime, weeklyTime } = {
-            totalTime: progressData.progress.totalStudyTime || 0,
-            weeklyTime: progressData.progress.weeklyTime || 0
-          }
-          
-          setAnalyticsData({
-            sessions,
-            streak,
-            skills,
-            totalTime,
-            weeklyTime
-          })
-        } else {
-          setError('Failed to load analytics data')
-        }
-      } catch (err) {
-        console.error('Error fetching analytics:', err)
-        setError('Failed to connect to database')
-      } finally {
-        setLoading(false)
+    // Load sessions from localStorage
+    const storedSessions = localStorage.getItem('studySessions')
+    const sessions = storedSessions ? JSON.parse(storedSessions) : generateMockData()
+    
+    // Calculate metrics
+    const streak = calculateStreak(sessions)
+    const skills = calculateSkillProficiency()
+    const { totalTime, weeklyTime } = calculateTimeMetrics(sessions)
+    
+    setAnalyticsData({
+      sessions,
+      streak,
+      skills,
+      totalTime,
+      weeklyTime
+    })
+    
+    // Store mock data if none exists
+    if (!storedSessions) {
+      localStorage.setItem('studySessions', JSON.stringify(sessions))
+    }
+  }, [progress])
+
+  // Generate mock data for demonstration
+  function generateMockData(): StudySession[] {
+    const sessions: StudySession[] = []
+    const today = new Date()
+    
+    for (let i = 30; i >= 0; i--) {
+      const date = new Date(today)
+      date.setDate(date.getDate() - i)
+      
+      // Random chance of having a session that day
+      if (Math.random() > 0.3) {
+        sessions.push({
+          date: date.toISOString().split('T')[0],
+          duration: Math.floor(Math.random() * 120) + 30, // 30-150 minutes
+          modulesCompleted: [],
+          xpGained: Math.floor(Math.random() * 300) + 50,
+          technology: ['javascript', 'react', 'nextjs'][Math.floor(Math.random() * 3)]
+        })
       }
     }
     
-    fetchAnalytics()
-  }, [progress])
-
+    return sessions
+  }
 
   // Calculate current and longest streak
   function calculateStreak(sessions: StudySession[]): StreakData {
@@ -269,37 +241,6 @@ export default function AnalyticsPage() {
   const heatmapData = generateHeatmapData()
   const velocityData = generateVelocityData()
   const maxXP = Math.max(...velocityData.map(d => d.xp), 100)
-
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen px-6 py-8 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          <p className="mt-4 text-muted-foreground">Loading analytics data...</p>
-        </div>
-      </div>
-    )
-  }
-  
-  // Show error state
-  if (error) {
-    return (
-      <div className="min-h-screen px-6 py-8 flex items-center justify-center">
-        <div className="text-center glass rounded-2xl p-8 max-w-md">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-medium mb-2">Unable to Load Analytics</h2>
-          <p className="text-muted-foreground mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="btn-arcade btn-arcade-primary"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen px-6 py-8">

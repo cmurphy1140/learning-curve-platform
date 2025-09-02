@@ -40,9 +40,9 @@ export function useActivityTracking() {
   }, [])
   
   /**
-   * Save session data to database
+   * Save session data to localStorage
    */
-  const saveSession = useCallback(async () => {
+  const saveSession = useCallback(() => {
     if (!sessionRef.current) return
     
     const now = Date.now()
@@ -55,18 +55,28 @@ export function useActivityTracking() {
     if (now - lastSaveRef.current < 60000) return
     
     try {
-      await fetch('/api/analytics/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: 'anonymous', // In production, get from auth context
-          duration,
-          technology: sessionRef.current.technology,
-          modulesCompleted: sessionRef.current.modulesCompleted,
-          xpGained: sessionRef.current.xpGained,
-          date: new Date().toISOString()
-        })
+      // Get existing sessions from localStorage
+      const existing = localStorage.getItem('studySessions')
+      const sessions = existing ? JSON.parse(existing) : []
+      
+      // Add new session
+      sessions.push({
+        id: `session-${Date.now()}`,
+        userId: 'anonymous',
+        duration,
+        technology: sessionRef.current.technology,
+        modulesCompleted: sessionRef.current.modulesCompleted,
+        xpGained: sessionRef.current.xpGained,
+        date: new Date().toISOString().split('T')[0]
       })
+      
+      // Keep only last 100 sessions
+      if (sessions.length > 100) {
+        sessions.shift()
+      }
+      
+      // Save back to localStorage
+      localStorage.setItem('studySessions', JSON.stringify(sessions))
       
       lastSaveRef.current = now
       
