@@ -4,11 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "postinstall": "prisma generate"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.11.3",
