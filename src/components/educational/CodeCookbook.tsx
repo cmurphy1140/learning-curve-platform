@@ -28,8 +28,10 @@ import {
   Search,
   Cpu,
   Palette,
-  Zap
+  Zap,
+  Play
 } from 'lucide-react'
+import { LivePreview } from './LivePreview'
 
 // Map of components to their actual file paths and relevant code sections
 const componentMap = {
@@ -180,6 +182,95 @@ interface CodeCookbookProps {
   defaultOpen?: boolean
 }
 
+// Get usage examples for components
+function getUsageExample(componentName: string): string {
+  const examples: Record<string, string> = {
+    'useScrollProgress': `import { useScrollProgress } from '@/hooks/useScrollProgress'
+
+function MyComponent() {
+  const { scrollProgress, isScrolling } = useScrollProgress()
+  
+  return (
+    <div>
+      <div className="progress-bar">
+        <div 
+          className="progress-fill"
+          style={{ width: \`\${scrollProgress * 100}%\` }}
+        />
+      </div>
+      {isScrolling && <p>Scrolling...</p>}
+    </div>
+  )
+}`,
+    
+    'useMousePosition': `import { useMousePosition } from '@/hooks/useMousePosition'
+
+function CursorFollower() {
+  const mousePosition = useMousePosition()
+  
+  return (
+    <div 
+      className="cursor-dot"
+      style={{
+        transform: \`translate(\${mousePosition.x}px, \${mousePosition.y}px)\`
+      }}
+    />
+  )
+}`,
+    
+    'AnimatedBackground': `import { AnimatedBackground } from '@/components/ui/AnimatedBackground'
+
+export function MyPage() {
+  return (
+    <div className="relative">
+      <AnimatedBackground />
+      <div className="relative z-10">
+        {/* Your content here */}
+      </div>
+    </div>
+  )
+}`,
+    
+    'InteractiveCard': `import { InteractiveCard } from '@/components/ui/InteractiveCard'
+
+<InteractiveCard intensity={10}>
+  <div className="p-6">
+    <h3>Interactive Content</h3>
+    <p>This card glows and tilts on hover!</p>
+  </div>
+</InteractiveCard>`,
+    
+    'MagneticButton': `import { MagneticButton } from '@/components/ui/MagneticButton'
+
+<MagneticButton 
+  className="btn-arcade btn-arcade-primary"
+  strength={0.25}
+  onClick={() => console.log('Clicked!')}
+>
+  <span>Magnetic Button</span>
+</MagneticButton>`,
+    
+    'ScrollReveal': `import { ScrollReveal } from '@/components/ui/ScrollReveal'
+
+<ScrollReveal delay={0.2} y={30}>
+  <h2>This fades in on scroll</h2>
+  <p>Content appears with smooth animation</p>
+</ScrollReveal>
+
+// With stagger for multiple items
+<ScrollReveal>
+  {items.map((item, i) => (
+    <div key={i} style={{ animationDelay: \`\${i * 0.1}s\` }}>
+      {item}
+    </div>
+  ))}
+</ScrollReveal>`,
+  }
+  
+  return examples[componentName] || `// Usage example for ${componentName}
+// Coming soon...`
+}
+
 export function CodeCookbook({ currentPage = '', defaultOpen = false }: CodeCookbookProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [selectedComponent, setSelectedComponent] = useState<string>('useScrollProgress')
@@ -188,6 +279,7 @@ export function CodeCookbook({ currentPage = '', defaultOpen = false }: CodeCook
   const [componentSource, setComponentSource] = useState<Record<string, string>>({})
   const [loadingSource, setLoadingSource] = useState<string | null>(null)
   const [showTooltip, setShowTooltip] = useState(true)
+  const [activeTab, setActiveTab] = useState<'source' | 'preview' | 'usage'>('source')
   
   // Filter components based on search
   const filteredComponents = Object.entries(componentMap).filter(([key, comp]) => {
@@ -424,35 +516,92 @@ ${data.content}`
                               {currentComponent.path}
                             </p>
                           </div>
-                          <button
-                            onClick={copyToClipboard}
-                            className="p-2 rounded-lg hover:bg-muted transition-colors"
-                            title="Copy to clipboard"
-                          >
-                            {copiedCode ? (
-                              <Check className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                          </button>
                         </div>
                       </div>
                       
-                      {/* Source Code */}
-                      <div className="flex-1 overflow-y-auto p-4 bg-black/5 dark:bg-white/5">
-                        {loadingSource === selectedComponent ? (
-                          <div className="flex items-center justify-center h-full">
-                            <div className="text-center">
-                              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-                              <p className="text-sm text-muted-foreground mt-2">Loading source...</p>
-                            </div>
+                      {/* Tabs */}
+                      <div className="flex border-b border-border">
+                        <button
+                          onClick={() => setActiveTab('preview')}
+                          className={`flex-1 px-4 py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                            activeTab === 'preview' 
+                              ? 'border-b-2 border-primary text-primary bg-primary/5' 
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          <Play className="h-4 w-4" />
+                          Preview
+                        </button>
+                        <button
+                          onClick={() => setActiveTab('source')}
+                          className={`flex-1 px-4 py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                            activeTab === 'source' 
+                              ? 'border-b-2 border-primary text-primary bg-primary/5' 
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          <Code2 className="h-4 w-4" />
+                          Source
+                        </button>
+                        <button
+                          onClick={() => setActiveTab('usage')}
+                          className={`flex-1 px-4 py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                            activeTab === 'usage' 
+                              ? 'border-b-2 border-primary text-primary bg-primary/5' 
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          <FileCode className="h-4 w-4" />
+                          Usage
+                        </button>
+                      </div>
+                      
+                      {/* Tab Content */}
+                      <div className="flex-1 overflow-y-auto">
+                        {activeTab === 'preview' && (
+                          <div className="p-4">
+                            <LivePreview componentName={selectedComponent} />
                           </div>
-                        ) : (
-                          <pre className="text-sm md:text-base font-mono leading-relaxed">
-                            <code className="language-typescript">
-                              {componentSource[selectedComponent] || 'Select a component to view its source code'}
-                            </code>
-                          </pre>
+                        )}
+                        
+                        {activeTab === 'source' && (
+                          <div className="p-4 bg-black/5 dark:bg-white/5 h-full relative">
+                            <button
+                              onClick={copyToClipboard}
+                              className="absolute top-2 right-2 p-2 rounded-lg bg-background hover:bg-muted transition-colors"
+                              title="Copy to clipboard"
+                            >
+                              {copiedCode ? (
+                                <Check className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </button>
+                            {loadingSource === selectedComponent ? (
+                              <div className="flex items-center justify-center h-full min-h-[300px]">
+                                <div className="text-center">
+                                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                                  <p className="text-sm text-muted-foreground mt-2">Loading source...</p>
+                                </div>
+                              </div>
+                            ) : (
+                              <pre className="text-sm md:text-base font-mono leading-relaxed pr-12">
+                                <code className="language-typescript">
+                                  {componentSource[selectedComponent] || 'Select a component to view its source code'}
+                                </code>
+                              </pre>
+                            )}
+                          </div>
+                        )}
+                        
+                        {activeTab === 'usage' && (
+                          <div className="p-4 bg-black/5 dark:bg-white/5 h-full">
+                            <pre className="text-sm md:text-base font-mono leading-relaxed">
+                              <code className="language-typescript">
+                                {getUsageExample(selectedComponent)}
+                              </code>
+                            </pre>
+                          </div>
                         )}
                       </div>
                     </>
