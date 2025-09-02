@@ -73,6 +73,11 @@ export default function AnalyticsPage() {
   
   // Load analytics data from localStorage
   useEffect(() => {
+    // Skip during SSR
+    if (typeof window === 'undefined') {
+      return
+    }
+    
     // Load sessions from localStorage
     const storedSessions = localStorage.getItem('studySessions')
     const sessions = storedSessions ? JSON.parse(storedSessions) : generateMockData()

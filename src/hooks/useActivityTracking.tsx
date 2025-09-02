@@ -13,7 +13,7 @@
 
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface SessionData {
@@ -117,6 +117,11 @@ export function useActivityTracking() {
    * Initialize session tracking on page load
    */
   useEffect(() => {
+    // Skip during SSR
+    if (typeof window === 'undefined') {
+      return
+    }
+    
     // Don't track on non-learning pages
     if (!pathname.includes('/learn') && !pathname.includes('/playground')) {
       return
