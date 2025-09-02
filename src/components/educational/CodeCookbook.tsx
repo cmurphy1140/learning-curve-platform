@@ -273,7 +273,7 @@ ${data.content}`
       <AnimatePresence>
         {showTooltip && !isOpen && (
           <motion.div
-            className="fixed right-20 top-36 z-50 glass-light dark:glass rounded-xl p-4 shadow-2xl max-w-xs"
+            className="fixed right-20 bottom-12 z-50 glass-light dark:glass rounded-xl p-4 shadow-2xl max-w-xs"
             initial={{ opacity: 0, x: 20, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 20, scale: 0.9 }}
@@ -297,39 +297,27 @@ ${data.content}`
         )}
       </AnimatePresence>
       
-      {/* Toggle Button - Now shows the actual code icon */}
+      {/* Toggle Button - Positioned at bottom right for better accessibility */}
       <motion.button
         onClick={() => {
           setIsOpen(!isOpen)
           setShowTooltip(false)
         }}
-        className="fixed right-0 top-32 z-50 group"
-        initial={{ x: 100 }}
-        animate={{ x: 0 }}
-        transition={{ type: "spring", delay: 1 }}
+        className="fixed right-4 bottom-8 z-50 group"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", delay: 1, damping: 15 }}
       >
         <div className="relative">
           {/* Button background with gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-l-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
-          <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 rounded-l-xl px-4 py-3 shadow-2xl">
-            <div className="flex items-center gap-2 text-white">
-              <motion.div
-                animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {isOpen ? <ChevronRight className="h-5 w-5" /> : <Code2 className="h-5 w-5" />}
-              </motion.div>
-              {!isOpen && (
-                <motion.span 
-                  className="text-sm font-medium pr-1"
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  transition={{ delay: 0.1 }}
-                >
-                  View Code
-                </motion.span>
-              )}
-            </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
+          <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 rounded-full p-4 shadow-2xl">
+            <motion.div
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isOpen ? <X className="h-6 w-6 text-white" /> : <Code2 className="h-6 w-6 text-white" />}
+            </motion.div>
           </div>
         </div>
       </motion.button>
@@ -349,7 +337,7 @@ ${data.content}`
             
             {/* Sidebar */}
             <motion.aside
-              className="fixed right-0 top-0 h-full w-full sm:w-[90vw] sm:max-w-[480px] bg-background border-l border-border shadow-2xl z-40 flex flex-col"
+              className="fixed right-0 top-0 h-full w-full md:w-[70vw] md:max-w-[800px] lg:max-w-[900px] bg-background border-l border-border shadow-2xl z-40 flex flex-col"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -386,9 +374,9 @@ ${data.content}`
               </div>
               
               {/* Component List & Code Display */}
-              <div className="flex-1 flex flex-col sm:flex-row overflow-hidden">
+              <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
                 {/* Component List */}
-                <div className="w-full sm:w-1/3 border-b sm:border-b-0 sm:border-r border-border overflow-y-auto p-2 max-h-[40vh] sm:max-h-full">
+                <div className="w-full md:w-1/4 lg:w-1/5 border-b md:border-b-0 md:border-r border-border overflow-y-auto p-2 max-h-[30vh] md:max-h-full">
                   {Object.entries(groupedComponents).map(([category, components]) => (
                     <div key={category} className="mb-4">
                       <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 mb-1">
@@ -460,7 +448,7 @@ ${data.content}`
                             </div>
                           </div>
                         ) : (
-                          <pre className="text-xs font-mono">
+                          <pre className="text-sm md:text-base font-mono leading-relaxed">
                             <code className="language-typescript">
                               {componentSource[selectedComponent] || 'Select a component to view its source code'}
                             </code>
