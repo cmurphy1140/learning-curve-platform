@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-specific styles for touch devices */
+@import '../styles/mobile.css';
+
 @layer base {
   :root {
     /* Light Mode Colors */

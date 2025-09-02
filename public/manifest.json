@@ -1,0 +1,121 @@
+{
+  "name": "Learning Curve - Modern Web Development",
+  "short_name": "Learning Curve",
+  "description": "Interactive educational platform for JavaScript, React, and Next.js",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "categories": ["education", "development", "programming"],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Homepage"
+    },
+    {
+      "src": "/screenshots/learn.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Learning Dashboard"
+    },
+    {
+      "src": "/screenshots/playground.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Code Playground"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Learning",
+      "short_name": "Learn",
+      "description": "Jump to learning dashboard",
+      "url": "/learn",
+      "icons": [
+        {
+          "src": "/icons/learn.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Playground",
+      "short_name": "Code",
+      "description": "Open code playground",
+      "url": "/playground",
+      "icons": [
+        {
+          "src": "/icons/playground.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Stats",
+      "description": "View your progress",
+      "url": "/analytics",
+      "icons": [
+        {
+          "src": "/icons/analytics.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
