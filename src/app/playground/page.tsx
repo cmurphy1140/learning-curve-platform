@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Sandpack } from '@codesandbox/sandpack-react'
 import { nightOwl, githubLight } from '@codesandbox/sandpack-themes'
 import { useTheme } from '@/components/providers/ThemeProvider'
@@ -14,8 +14,14 @@ import {
   RefreshCw,
   Save,
   Share2,
-  Download
+  Download,
+  Zap
 } from 'lucide-react'
+import { AnimatedBackground } from '@/components/ui/AnimatedBackground'
+import { InteractiveCard } from '@/components/ui/InteractiveCard'
+import { MagneticButton } from '@/components/ui/MagneticButton'
+import { ScrollReveal, StaggerReveal } from '@/components/ui/ScrollReveal'
+import { useScrollProgress } from '@/hooks/useScrollProgress'
 
 // Templates with proper code
 const TEMPLATES = {
@@ -176,158 +182,245 @@ export { Developer, identity };`
 export default function PlaygroundPage() {
   const { theme } = useTheme()
   const [activeTemplate, setActiveTemplate] = useState<'javascript' | 'react' | 'typescript'>('javascript')
+  const [mounted, setMounted] = useState(false)
+  const { scrollProgress } = useScrollProgress()
+  const { scrollY } = useScroll()
   const sandpackTheme = theme === 'dark' ? nightOwl : githubLight
+  
+  // Parallax transforms
+  const headerY = useTransform(scrollY, [0, 200], [0, -30])
+  const headerOpacity = useTransform(scrollY, [0, 150], [1, 0.9])
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
+  if (!mounted) return null
 
   return (
-    <div className="min-h-screen px-6 py-8">
+    <div className="min-h-screen px-6 py-8 relative overflow-hidden">
+      {/* Animated Background */}
+      <AnimatedBackground />
+      
+      {/* Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent z-50 origin-left"
+        style={{ scaleX: scrollProgress }}
+      />
+      
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
+        {/* Header with Parallax */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mb-8"
+          style={{ y: headerY, opacity: headerOpacity }}
         >
-          <h1 className="text-4xl font-light tracking-tight">
-            Interactive <span className="text-gradient">Playground</span>
-          </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            Experiment with code in a live environment. Perfect for testing concepts and ideas.
-          </p>
+          <ScrollReveal>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 backdrop-blur"
+            >
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Live Code Execution • Instant Preview</span>
+            </motion.div>
+            
+            <motion.h1 
+              className="text-4xl font-light tracking-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              Interactive{' '}
+              <motion.span
+                className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
+                style={{
+                  backgroundSize: '200% 100%',
+                }}
+              >
+                Playground
+              </motion.span>
+            </motion.h1>
+            <motion.p 
+              className="mt-2 text-lg text-muted-foreground"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              Experiment with code in a live environment. Perfect for testing concepts and ideas.
+            </motion.p>
+          </ScrollReveal>
         </motion.div>
 
-        {/* Template Selector */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-6 flex flex-wrap gap-2"
-        >
-          <button
-            onClick={() => setActiveTemplate('javascript')}
-            className={`nav-pill flex items-center gap-2 ${
-              activeTemplate === 'javascript' ? 'nav-pill-active' : ''
-            }`}
+        {/* Template Selector with Magnetic Buttons */}
+        <ScrollReveal>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mb-6 flex flex-wrap gap-2"
           >
-            <Code2 className="h-4 w-4" />
-            <span>JavaScript</span>
-          </button>
-          <button
-            onClick={() => setActiveTemplate('react')}
-            className={`nav-pill flex items-center gap-2 ${
-              activeTemplate === 'react' ? 'nav-pill-active' : ''
-            }`}
+            <MagneticButton 
+              onClick={() => setActiveTemplate('javascript')}
+              className={`nav-pill flex items-center gap-2 ${
+                activeTemplate === 'javascript' ? 'nav-pill-active' : ''
+              }`}
+              strength={0.15}
+            >
+              <Code2 className="h-4 w-4" />
+              <span>JavaScript</span>
+            </MagneticButton>
+            <MagneticButton
+              onClick={() => setActiveTemplate('react')}
+              className={`nav-pill flex items-center gap-2 ${
+                activeTemplate === 'react' ? 'nav-pill-active' : ''
+              }`}
+              strength={0.15}
+            >
+              <Code2 className="h-4 w-4" />
+              <span>React</span>
+            </MagneticButton>
+            <MagneticButton
+              onClick={() => setActiveTemplate('typescript')}
+              className={`nav-pill flex items-center gap-2 ${
+                activeTemplate === 'typescript' ? 'nav-pill-active' : ''
+              }`}
+              strength={0.15}
+            >
+              <Code2 className="h-4 w-4" />
+              <span>TypeScript</span>
+            </MagneticButton>
+          </motion.div>
+        </ScrollReveal>
+
+        {/* Sandpack Editor with Interactive Card */}
+        <ScrollReveal>
+          <InteractiveCard intensity={5}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="glass overflow-hidden rounded-2xl"
+              whileHover={{
+                boxShadow: '0 0 30px rgba(14, 165, 233, 0.3)',
+              }}
+            >
+              <Sandpack
+                key={activeTemplate}
+                template={TEMPLATES[activeTemplate].template}
+                theme={sandpackTheme}
+                files={TEMPLATES[activeTemplate].files}
+                options={{
+                  showNavigator: false,
+                  showTabs: true,
+                  showLineNumbers: true,
+                  showInlineErrors: true,
+                  wrapContent: true,
+                  editorHeight: 500,
+                  bundlerTimeOut: 30000,
+                  showConsole: true,
+                  showConsoleButton: true,
+                }}
+              />
+            </motion.div>
+          </InteractiveCard>
+        </ScrollReveal>
+
+        {/* Feature Cards with Stagger Animation */}
+        <StaggerReveal staggerDelay={0.1}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4"
           >
-            <Code2 className="h-4 w-4" />
-            <span>React</span>
-          </button>
-          <button
-            onClick={() => setActiveTemplate('typescript')}
-            className={`nav-pill flex items-center gap-2 ${
-              activeTemplate === 'typescript' ? 'nav-pill-active' : ''
-            }`}
+            {[
+              { icon: Code2, title: 'Multiple Languages', description: 'Write JavaScript, TypeScript, and React code with full support' },
+              { icon: Sparkles, title: 'Live Preview', description: 'See your changes instantly with hot module reloading' },
+              { icon: Lightbulb, title: 'Smart Errors', description: 'Get helpful error messages that guide you to the solution' },
+              { icon: Rocket, title: 'Console Output', description: 'View console logs and debug your code in real-time' },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <InteractiveCard intensity={10}>
+                  <FeatureCard {...feature} />
+                </InteractiveCard>
+              </motion.div>
+            ))}
+          </motion.div>
+        </StaggerReveal>
+
+        {/* Tips Section with Scroll Reveal */}
+        <ScrollReveal>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-12 grid gap-4 md:grid-cols-3"
           >
-            <Code2 className="h-4 w-4" />
-            <span>TypeScript</span>
-          </button>
-        </motion.div>
-
-        {/* Sandpack Editor */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass overflow-hidden rounded-2xl"
-        >
-          <Sandpack
-            key={activeTemplate}
-            template={TEMPLATES[activeTemplate].template}
-            theme={sandpackTheme}
-            files={TEMPLATES[activeTemplate].files}
-            options={{
-              showNavigator: false,
-              showTabs: true,
-              showLineNumbers: true,
-              showInlineErrors: true,
-              wrapContent: true,
-              editorHeight: 500,
-              bundlerTimeOut: 30000,
-              showConsole: true,
-              showConsoleButton: true,
-            }}
-          />
-        </motion.div>
-
-        {/* Feature Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4"
-        >
-          <FeatureCard
-            icon={Code2}
-            title="Multiple Languages"
-            description="Write JavaScript, TypeScript, and React code with full support"
-          />
-          <FeatureCard
-            icon={Sparkles}
-            title="Live Preview"
-            description="See your changes instantly with hot module reloading"
-          />
-          <FeatureCard
-            icon={Lightbulb}
-            title="Smart Errors"
-            description="Get helpful error messages that guide you to the solution"
-          />
-          <FeatureCard
-            icon={Rocket}
-            title="Console Output"
-            description="View console logs and debug your code in real-time"
-          />
-        </motion.div>
-
-        {/* Tips Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 grid gap-4 md:grid-cols-3"
-        >
-          <TipCard
-            title="Quick Tips"
-            tips={[
-              'Use console.log() to debug your code',
-              'Press Cmd/Ctrl + S to format code',
-              'Errors appear inline with suggestions',
-              'Switch templates to try different frameworks',
-            ]}
-          />
-          <TipCard
-            title="Keyboard Shortcuts"
-            tips={[
-              'Cmd/Ctrl + Enter: Run code',
-              'Cmd/Ctrl + Z: Undo changes',
-              'Cmd/Ctrl + Shift + Z: Redo',
-              'Cmd/Ctrl + /: Toggle comment',
-            ]}
-          />
-          <TipCard
-            title="Learning Challenges"
-            tips={[
-              'Build a todo list with local storage',
-              'Create a countdown timer',
-              'Implement array sorting algorithms',
-              'Build a simple calculator',
-            ]}
-          />
-        </motion.div>
+            {[
+              {
+                title: 'Quick Tips',
+                tips: [
+                  'Use console.log() to debug your code',
+                  'Press Cmd/Ctrl + S to format code',
+                  'Errors appear inline with suggestions',
+                  'Switch templates to try different frameworks',
+                ]
+              },
+              {
+                title: 'Keyboard Shortcuts',
+                tips: [
+                  'Cmd/Ctrl + Enter: Run code',
+                  'Cmd/Ctrl + Z: Undo changes',
+                  'Cmd/Ctrl + Shift + Z: Redo',
+                  'Cmd/Ctrl + /: Toggle comment',
+                ]
+              },
+              {
+                title: 'Learning Challenges',
+                tips: [
+                  'Build a todo list with local storage',
+                  'Create a countdown timer',
+                  'Implement array sorting algorithms',
+                  'Build a simple calculator',
+                ]
+              },
+            ].map((tipData, index) => (
+              <motion.div
+                key={tipData.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <InteractiveCard intensity={8}>
+                  <TipCard {...tipData} />
+                </InteractiveCard>
+              </motion.div>
+            ))}
+          </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   )
 }
 
-// Feature Card Component
+// Feature Card Component with animation
 function FeatureCard({ 
   icon: Icon, 
   title, 
@@ -338,27 +431,46 @@ function FeatureCard({
   description: string 
 }) {
   return (
-    <div className="module-card group">
-      <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-r from-primary/20 to-accent/20">
+    <motion.div 
+      className="module-card group"
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
+      <motion.div 
+        className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-r from-primary/20 to-accent/20"
+        whileHover={{ rotate: 360 }}
+        transition={{ duration: 0.5 }}
+      >
         <Icon className="h-5 w-5 text-primary" />
-      </div>
+      </motion.div>
       <h3 className="mb-2 font-medium">{title}</h3>
       <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
+    </motion.div>
   )
 }
 
-// Tip Card Component
+// Tip Card Component with hover effects
 function TipCard({ title, tips }: { title: string; tips: string[] }) {
   return (
     <div className="module-card">
       <h3 className="mb-3 font-medium">{title}</h3>
       <ul className="space-y-2">
         {tips.map((tip, index) => (
-          <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-            <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-primary" />
+          <motion.li 
+            key={index} 
+            className="flex items-start gap-2 text-sm text-muted-foreground"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.05 }}
+            whileHover={{ x: 5 }}
+          >
+            <motion.span 
+              className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-primary"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
+            />
             <span>{tip}</span>
-          </li>
+          </motion.li>
         ))}
       </ul>
     </div>

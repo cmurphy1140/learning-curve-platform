@@ -20,6 +20,7 @@ import { Sandpack } from '@codesandbox/sandpack-react'
 import { nightOwl, githubLight } from '@codesandbox/sandpack-themes'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { useProgress } from '@/components/providers/ProgressProvider'
+import { CookbookSidebar } from '@/components/educational/CookbookSidebar'
 
 // Lesson content with pedagogical structure
 const lessonContent = {
@@ -415,8 +416,12 @@ export default function JavaScriptBasicsPage() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-8">
-      <div className="mx-auto max-w-4xl">
+    <>
+      {/* Cookbook Sidebar - Like having a reference book next to your workspace */}
+      <CookbookSidebar currentLesson="js-basics" />
+      
+      <div className="min-h-screen px-6 py-8">
+        <div className="mx-auto max-w-4xl">
         {/* Breadcrumb Navigation */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -722,5 +727,6 @@ export default function JavaScriptBasicsPage() {
         </motion.div>
       </div>
     </div>
+    </>
   )
 }
