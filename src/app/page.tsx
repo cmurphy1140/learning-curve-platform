@@ -1,16 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ArrowRight, BookOpen, Code2, Zap, Trophy, Users, Sparkles, Star, Globe, Layers } from 'lucide-react'
+import { ArrowRight, BookOpen, Code2, Zap, Trophy, Users, Sparkles, Star } from 'lucide-react'
 import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { LearningPathCard } from '@/components/educational/LearningPathCard'
 import { FeatureCard } from '@/components/ui/FeatureCard'
-import { StatsCard } from '@/components/ui/StatsCard'
 import { AnimatedBackground } from '@/components/ui/AnimatedBackground'
 import { InteractiveCard } from '@/components/ui/InteractiveCard'
 import { MagneticButton } from '@/components/ui/MagneticButton'
-import { ScrollReveal, StaggerReveal } from '@/components/ui/ScrollReveal'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
 import { CodeCookbook } from '@/components/educational/CodeCookbook'
 
@@ -71,13 +70,6 @@ const features = [
     title: 'Community Support',
     description: 'Learn alongside peers with discussion forums and code reviews',
   },
-]
-
-const stats = [
-  { label: 'Learning Modules', value: '30+', trend: '+5 this month' },
-  { label: 'Interactive Examples', value: '150+', trend: '+20 this week' },
-  { label: 'Practice Exercises', value: '200+', trend: 'Updated daily' },
-  { label: 'Success Rate', value: '92%', trend: 'Industry leading' },
 ]
 
 export default function HomePage() {
@@ -173,34 +165,168 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            {/* Static floating elements for performance */}
+            {/* Floating tech icons */}
             <div className="absolute left-10 top-20 hidden lg:block">
-              <div className="rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 p-3 backdrop-blur animate-float-slow">
-                <Globe className="h-6 w-6 text-primary" />
+              <div className="rounded-xl bg-gradient-to-r from-yellow-500/20 to-orange-500/20 p-3 backdrop-blur animate-float-slow">
+                {/* JavaScript Icon */}
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                  <rect width="24" height="24" rx="3" fill="#F7DF1E"/>
+                  <path d="M12 12.5v4.5c0 .83-.67 1.5-1.5 1.5S9 17.83 9 17v-.5" stroke="#000" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M16.5 13.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5-.5.5-.5 1.5.67 1 1.5 1" stroke="#000" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
               </div>
             </div>
             
-            <div className="absolute right-10 bottom-20 hidden lg:block">
-              <div className="rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 p-3 backdrop-blur animate-float-slower">
-                <Layers className="h-6 w-6 text-purple-400" />
+            <div className="absolute right-10 top-40 hidden lg:block">
+              <div className="rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-3 backdrop-blur animate-float-slower">
+                {/* React Icon */}
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="2" fill="#61DAFB"/>
+                  <ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="#61DAFB" strokeWidth="1.5"/>
+                  <ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="#61DAFB" strokeWidth="1.5" transform="rotate(60 12 12)"/>
+                  <ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="#61DAFB" strokeWidth="1.5" transform="rotate(120 12 12)"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div className="absolute left-20 bottom-32 hidden lg:block">
+              <div className="rounded-xl bg-gradient-to-r from-blue-600/20 to-blue-400/20 p-3 backdrop-blur animate-float-slow">
+                {/* TypeScript Icon */}
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                  <rect width="24" height="24" rx="3" fill="#3178C6"/>
+                  <path d="M12 8v10M9 8h6" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M16.5 10c.83 0 1.5.67 1.5 1.5S17.33 13 16.5 13s-.5.5-.5 1.5.67 1.5 1.5 1.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div className="absolute right-16 bottom-20 hidden lg:block">
+              <div className="rounded-xl bg-gradient-to-r from-gray-800/20 to-gray-600/20 p-3 backdrop-blur animate-float-slower">
+                {/* Next.js Icon */}
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="11" fill="black" stroke="white" strokeWidth="1"/>
+                  <path d="M9 9l7 7" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M8 8v8h3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
             </div>
           </div>
         </ScrollReveal>
       </motion.section>
 
-      {/* Stats Section with Stagger Animation */}
-      <section className="px-6 py-12 lg:px-8">
+      {/* Interactive Demo Section */}
+      <section className="px-6 py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <StaggerReveal>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {stats.map((stat, index) => (
-                <InteractiveCard key={stat.label} intensity={5}>
-                  <StatsCard {...stat} />
-                </InteractiveCard>
-              ))}
+          <ScrollReveal>
+            <div className="glass rounded-3xl p-8 lg:p-12">
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h2 className="text-3xl font-light tracking-tight sm:text-4xl mb-4">
+                    Try It <span className="text-gradient">Right Now</span>
+                  </h2>
+                  <p className="text-lg text-muted-foreground mb-6">
+                    Experience our interactive learning platform. Edit the code and see 
+                    results instantly - no setup required.
+                  </p>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-full bg-green-500/10 p-2">
+                        <Zap className="h-4 w-4 text-green-500" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Instant Feedback</h3>
+                        <p className="text-sm text-muted-foreground">
+                          See your changes reflected immediately
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-full bg-blue-500/10 p-2">
+                        <Code2 className="h-4 w-4 text-blue-500" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Real Development Environment</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Full syntax highlighting and error detection
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-full bg-purple-500/10 p-2">
+                        <BookOpen className="h-4 w-4 text-purple-500" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Guided Learning</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Each example includes explanations and challenges
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="relative">
+                  <div className="rounded-xl bg-gray-900 p-4 shadow-2xl">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-3 w-3 rounded-full bg-red-500" />
+                      <div className="h-3 w-3 rounded-full bg-yellow-500" />
+                      <div className="h-3 w-3 rounded-full bg-green-500" />
+                      <span className="ml-2 text-xs text-gray-400">playground.js</span>
+                    </div>
+                    <pre className="text-sm text-gray-300 font-mono">
+                      <code>{`// Try changing the greeting!
+const greeting = "Hello, World!";
+const name = "Developer";
+
+function welcome(user) {
+  return \`\${greeting} Welcome, \${user}!\`;
+}
+
+console.log(welcome(name));
+// Output: Hello, World! Welcome, Developer!`}</code>
+                    </pre>
+                    <div className="mt-3 border-t border-gray-800 pt-3">
+                      <p className="text-xs text-gray-400 mb-1">Console Output:</p>
+                      <p className="text-sm text-green-400 font-mono">
+                        Hello, World! Welcome, Developer!
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Floating indicator */}
+                  <motion.div
+                    className="absolute -top-2 -right-2 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
+                    animate={{ 
+                      scale: [1, 1.05, 1],
+                      rotate: [-2, 2, -2]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    Live Code
+                  </motion.div>
+                </div>
+              </div>
+              
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center">
+                <Link href="/playground">
+                  <MagneticButton className="btn-arcade btn-arcade-primary inline-flex items-center gap-2">
+                    <span className="relative z-10">Open Full Playground</span>
+                    <ArrowRight className="relative z-10 h-5 w-5" />
+                  </MagneticButton>
+                </Link>
+                <Link href="/learn/javascript">
+                  <MagneticButton className="btn-arcade btn-arcade-glass inline-flex items-center gap-2">
+                    <BookOpen className="h-5 w-5" />
+                    <span>Start Learning</span>
+                  </MagneticButton>
+                </Link>
+              </div>
             </div>
-          </StaggerReveal>
+          </ScrollReveal>
         </div>
       </section>
 

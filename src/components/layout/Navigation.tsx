@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, BookOpen, Code2, Sun, Moon, Home, Zap } from 'lucide-react'
+import { Menu, X, BookOpen, Code2, Sun, Moon, Home, Zap, BarChart3 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '@/components/providers/ThemeProvider'
 
@@ -13,6 +13,7 @@ const navItems = [
   { href: '/learn/react', label: 'React', icon: Zap },
   { href: '/learn/nextjs', label: 'Next.js', icon: BookOpen },
   { href: '/playground', label: 'Playground', icon: Code2 },
+  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
 ]
 
 export function Navigation() {

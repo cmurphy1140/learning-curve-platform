@@ -17,7 +17,8 @@ import {
   BookOpen,
   Trophy,
   Target,
-  Sparkles
+  Sparkles,
+  BarChart3
 } from 'lucide-react'
 import Link from 'next/link'
 import { useProgress } from '@/components/providers/ProgressProvider'
@@ -119,11 +120,20 @@ export default function LearnPage() {
                 Level {progress.level} • {progress.experience} XP earned
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-4xl font-bold text-primary">
-                {getTotalProgress()}%
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/analytics"
+                className="btn-arcade btn-arcade-glass inline-flex items-center gap-2"
+              >
+                <BarChart3 className="h-4 w-4" />
+                <span>View Analytics</span>
+              </Link>
+              <div className="text-right">
+                <div className="text-4xl font-bold text-primary">
+                  {getTotalProgress()}%
+                </div>
+                <p className="text-sm text-muted-foreground">Complete</p>
               </div>
-              <p className="text-sm text-muted-foreground">Complete</p>
             </div>
           </div>
           
