@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Mode Colors */
+    --foreground: 0 0% 0%;
+    --background: 0 0% 100%;
+    --card: 0 0% 100%;
+    --primary: 210 100% 50%;
+    --accent: 210 100% 50%;
+    --muted: 0 0% 96%;
+    --border: 0 0% 92%;
+  }
+
+  .dark {
+    /* Dark Mode Colors (Default) */
+    --foreground: 0 0% 100%;
+    --background: 0 0% 0%;
+    --card: 0 0% 7%;
+    --primary: 210 100% 50%;
+    --accent: 210 100% 50%;
+    --muted: 0 0% 15%;
+    --border: 0 0% 15%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "kern" on, "liga" on, "calt" on, "zero" on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Glass Morphism Effect */
+  .glass {
+    @apply bg-white/5 backdrop-blur-[20px] backdrop-saturate-150 border border-white/10;
+  }
+
+  .glass-light {
+    @apply bg-white/70 backdrop-blur-[20px] backdrop-saturate-150 border border-white/20;
+  }
+
+  /* Gradient Cards */
+  .gradient-card {
+    @apply relative overflow-hidden rounded-2xl p-6 transition-all duration-300;
+  }
+
+  .gradient-card::before {
+    @apply absolute inset-0 opacity-90 transition-opacity duration-300;
+    content: '';
+  }
+
+  .gradient-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .gradient-card:hover {
+    @apply -translate-y-1 scale-[1.02];
+  }
+
+  .gradient-card-blue::before {
+    @apply bg-gradient-blue;
+  }
+
+  .gradient-card-green::before {
+    @apply bg-gradient-green;
+  }
+
+  .gradient-card-purple::before {
+    @apply bg-gradient-purple;
+  }
+
+  .gradient-card-orange::before {
+    @apply bg-gradient-orange;
+  }
+
+  /* Arcade Button Styles */
+  .btn-arcade {
+    @apply relative px-6 py-3 font-medium rounded-lg transition-all duration-300 overflow-hidden;
+    @apply before:absolute before:inset-0 before:bg-gradient-to-r before:from-primary before:to-accent;
+    @apply before:transition-transform before:duration-300 before:scale-x-0 before:origin-left;
+    @apply hover:before:scale-x-100;
+    @apply hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  .btn-arcade-primary {
+    @apply bg-primary text-white;
+  }
+
+  .btn-arcade-glass {
+    @apply glass text-foreground;
+  }
+
+  /* Code Block Styling */
+  .code-block {
+    @apply bg-muted/50 rounded-lg p-4 font-mono text-sm overflow-x-auto;
+    @apply border border-border/50;
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    @apply relative h-2 bg-muted rounded-full overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-accent;
+    @apply transition-all duration-500 ease-out;
+  }
+
+  /* Interactive Card Hover */
+  .interactive-card {
+    @apply transition-all duration-300 cursor-pointer;
+    @apply hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  /* Scroll Animations */
+  .animate-on-scroll {
+    @apply opacity-0 translate-y-4;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  /* Navigation Pills */
+  .nav-pill {
+    @apply px-4 py-2 rounded-full transition-all duration-200;
+    @apply hover:bg-muted/50 hover:scale-105;
+  }
+
+  .nav-pill-active {
+    @apply bg-gradient-to-r from-primary to-accent text-white;
+  }
+
+  /* Section Headers */
+  .section-header {
+    @apply text-4xl md:text-5xl lg:text-6xl font-thin tracking-tight;
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Learning Module Cards */
+  .module-card {
+    @apply glass rounded-2xl p-6 transition-all duration-300;
+    @apply hover:shadow-2xl hover:-translate-y-1;
+    @apply border border-white/10;
+  }
+
+  /* Achievement Badge */
+  .achievement-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full;
+    @apply bg-gradient-to-r from-primary/20 to-accent/20;
+    @apply border border-primary/30;
+    @apply text-sm font-medium;
+  }
+
+  /* Loading Skeleton */
+  .skeleton {
+    @apply relative overflow-hidden bg-muted/50 rounded;
+  }
+
+  .skeleton::after {
+    @apply absolute inset-0;
+    content: '';
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Ripple Effect */
+  .ripple {
+    @apply relative overflow-hidden;
+  }
+
+  .ripple::before {
+    @apply absolute top-1/2 left-1/2 w-0 h-0 rounded-full bg-white/20;
+    content: '';
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .ripple:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full;
+    @apply hover:bg-primary/70;
+  }
+
+  /* Focus Styles */
+  .focus-outline {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+    @apply focus:ring-offset-background;
+  }
+}
+
+@layer utilities {
+  /* Text Gradients */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Mesh Background */
+  .mesh-gradient {
+    background-image: radial-gradient(at 40% 20%, hsla(210, 100%, 50%, 0.3) 0px, transparent 50%),
+                      radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.3) 0px, transparent 50%),
+                      radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.1) 0px, transparent 50%);
+  }
+}
