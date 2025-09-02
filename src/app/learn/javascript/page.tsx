@@ -5,6 +5,7 @@ import { ChevronRight, ChevronDown, Code2, BookOpen, Zap, CheckCircle, Lock } fr
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useProgress } from '@/components/providers/ProgressProvider'
+import { CookbookSidebar } from '@/components/educational/CookbookSidebar'
 
 const modules = [
   {
@@ -15,6 +16,7 @@ const modules = [
     difficulty: 'Beginner',
     duration: '45 min',
     xp: 100,
+    status: 'available', // First module is always available
   },
   {
     id: 'js-functions',
@@ -24,6 +26,7 @@ const modules = [
     difficulty: 'Beginner',
     duration: '60 min',
     xp: 150,
+    status: 'locked',
   },
   {
     id: 'js-arrays',
@@ -33,6 +36,7 @@ const modules = [
     difficulty: 'Intermediate',
     duration: '75 min',
     xp: 200,
+    status: 'locked',
   },
   {
     id: 'js-async',
@@ -42,6 +46,7 @@ const modules = [
     difficulty: 'Advanced',
     duration: '90 min',
     xp: 250,
+    status: 'locked',
   },
   {
     id: 'js-es6',
@@ -51,6 +56,7 @@ const modules = [
     difficulty: 'Intermediate',
     duration: '60 min',
     xp: 200,
+    status: 'locked',
   },
 ]
 
@@ -83,9 +89,13 @@ export default function JavaScriptLearningPage() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-8">
-      <div className="mx-auto max-w-4xl">
-        {/* Header */}
+    <div className="relative">
+      {/* Cookbook Sidebar for quick reference */}
+      <CookbookSidebar currentLesson="javascript" />
+      
+      <div className="min-h-screen px-6 py-8">
+        <div className="mx-auto max-w-4xl">
+          {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -279,6 +289,7 @@ export default function JavaScriptLearningPage() {
           </Link>
         </motion.div>
       </div>
+    </div>
     </div>
   )
 }

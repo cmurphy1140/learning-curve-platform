@@ -404,10 +404,22 @@ export function CookbookSidebar({
   const [searchQuery, setSearchQuery] = useState('')
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [selectedLanguage, setSelectedLanguage] = useState<'javascript' | 'typescript'>('javascript')
+  const [showTooltip, setShowTooltip] = useState(true)
   
   // Use controlled state if provided, otherwise use internal state
   const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen
-  const handleToggle = onToggle || (() => setInternalIsOpen(!internalIsOpen))
+  const handleToggle = onToggle || (() => {
+    setInternalIsOpen(!internalIsOpen)
+    setShowTooltip(false)
+  })
+  
+  // Hide tooltip after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTooltip(false)
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [])
   
   // Filter snippets based on category, search, and current lesson
   const filteredSnippets = cookbookSnippets.filter(snippet => {
@@ -445,6 +457,27 @@ export function CookbookSidebar({
   
   return (
     <>
+      {/* Tooltip for first-time users */}
+      <AnimatePresence>
+        {showTooltip && !isOpen && (
+          <motion.div
+            className="fixed right-20 top-28 z-50 bg-card border border-border rounded-lg p-3 shadow-xl"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ delay: 1 }}
+          >
+            <div className="flex items-center gap-2">
+              <Lightbulb className="h-4 w-4 text-primary" />
+              <span className="text-sm">Click here for code references!</span>
+            </div>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full">
+              <div className="border-8 border-transparent border-l-card" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       {/* Toggle Button - Always Visible with Pulse Animation */}
       <motion.button
         onClick={handleToggle}
