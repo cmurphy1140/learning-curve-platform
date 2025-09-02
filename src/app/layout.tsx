@@ -3,6 +3,7 @@ import './globals.css'
 import { Navigation } from '@/components/layout/Navigation'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { ProgressProvider } from '@/components/providers/ProgressProvider'
+import { ActivityTracker } from '@/hooks/useActivityTracking'
 
 export const metadata: Metadata = {
   title: 'Learning Curve - Master JavaScript, React & Next.js',
@@ -26,14 +27,16 @@ export default function RootLayout({
       <body className="min-h-screen bg-background antialiased">
         <ThemeProvider>
           <ProgressProvider>
-            <div className="relative flex min-h-screen flex-col">
-              <Navigation />
-              <main className="flex-1">{children}</main>
-              <footer className="glass border-t border-border/50 py-6 text-center text-sm text-muted-foreground">
-                <p>Learning Curve - Built with Next.js, React, and TypeScript</p>
-              </footer>
-            </div>
-            <div className="fixed inset-0 -z-10 mesh-gradient opacity-30" />
+            <ActivityTracker>
+              <div className="relative flex min-h-screen flex-col">
+                <Navigation />
+                <main className="flex-1">{children}</main>
+                <footer className="glass border-t border-border/50 py-6 text-center text-sm text-muted-foreground">
+                  <p>Learning Curve - Built with Next.js, React, and TypeScript</p>
+                </footer>
+              </div>
+              <div className="fixed inset-0 -z-10 mesh-gradient opacity-30" />
+            </ActivityTracker>
           </ProgressProvider>
         </ThemeProvider>
       </body>
