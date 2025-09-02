@@ -5,7 +5,7 @@ import { ChevronRight, ChevronDown, Code2, BookOpen, Zap, CheckCircle, Lock } fr
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useProgress } from '@/components/providers/ProgressProvider'
-import { CookbookSidebar } from '@/components/educational/CookbookSidebar'
+import { CodeCookbook } from '@/components/educational/CodeCookbook'
 
 const modules = [
   {
@@ -90,8 +90,8 @@ export default function JavaScriptLearningPage() {
 
   return (
     <div className="relative">
-      {/* Cookbook Sidebar for quick reference */}
-      <CookbookSidebar currentLesson="javascript" />
+      {/* Code Cookbook for viewing actual source code */}
+      <CodeCookbook currentPage="javascript" />
       
       <div className="min-h-screen px-6 py-8">
         <div className="mx-auto max-w-4xl">

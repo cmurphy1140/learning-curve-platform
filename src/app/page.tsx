@@ -12,6 +12,7 @@ import { InteractiveCard } from '@/components/ui/InteractiveCard'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { ScrollReveal, StaggerReveal } from '@/components/ui/ScrollReveal'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
+import { CodeCookbook } from '@/components/educational/CodeCookbook'
 
 const learningPaths = [
   {
@@ -96,6 +97,9 @@ export default function HomePage() {
 
   return (
     <div className="relative overflow-hidden">
+      {/* Code Cookbook - View the source code of components on this page */}
+      <CodeCookbook currentPage="home" />
+      
       {/* Animated Background */}
       <AnimatedBackground />
       
@@ -150,19 +154,19 @@ export default function HomePage() {
 
             {/* CTA Buttons */}
             <motion.div
-              className="mt-10 flex items-center justify-center gap-4"
+              className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              <MagneticButton className="btn-arcade btn-arcade-primary inline-flex items-center gap-2">
+              <MagneticButton className="btn-arcade btn-arcade-primary w-full sm:w-auto inline-flex items-center justify-center gap-2">
                 <Link href="/learn/javascript" className="flex items-center gap-2">
                   <span className="relative z-10">Start Learning</span>
                   <ArrowRight className="relative z-10 h-5 w-5" />
                 </Link>
               </MagneticButton>
-              <Link href="/playground">
-                <MagneticButton className="btn-arcade btn-arcade-glass inline-flex items-center gap-2">
+              <Link href="/playground" className="w-full sm:w-auto">
+                <MagneticButton className="btn-arcade btn-arcade-glass w-full sm:w-auto inline-flex items-center justify-center gap-2">
                   <Code2 className="h-5 w-5" />
                   <span>Try Playground</span>
                 </MagneticButton>

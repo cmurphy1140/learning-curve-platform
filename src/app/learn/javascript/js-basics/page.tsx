@@ -20,7 +20,7 @@ import { Sandpack } from '@codesandbox/sandpack-react'
 import { nightOwl, githubLight } from '@codesandbox/sandpack-themes'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { useProgress } from '@/components/providers/ProgressProvider'
-import { CookbookSidebar } from '@/components/educational/CookbookSidebar'
+import { CodeCookbook } from '@/components/educational/CodeCookbook'
 
 // Lesson content with pedagogical structure
 const lessonContent = {
@@ -418,7 +418,7 @@ export default function JavaScriptBasicsPage() {
   return (
     <>
       {/* Cookbook Sidebar - Like having a reference book next to your workspace */}
-      <CookbookSidebar currentLesson="js-basics" />
+      <CodeCookbook currentPage="js-basics" />
       
       <div className="min-h-screen px-6 py-8">
         <div className="mx-auto max-w-4xl">
