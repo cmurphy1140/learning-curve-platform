@@ -5,16 +5,14 @@ const nextConfig = {
     domains: [],
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
+    // Only ignore in development for faster builds
+    // Production builds should catch all errors
+    ignoreBuildErrors: process.env.NODE_ENV === 'development',
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true,
+    // Only ignore in development for faster builds
+    // Production builds should catch all errors
+    ignoreDuringBuilds: process.env.NODE_ENV === 'development',
   },
 }
 
