@@ -12,6 +12,7 @@ import { MagneticButton } from '@/components/ui/MagneticButton'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
 import { CodeCookbook } from '@/components/educational/CodeCookbook'
+import { TerminalTyping } from '@/components/ui/TerminalTyping'
 
 const learningPaths = [
   {
@@ -121,7 +122,7 @@ export default function HomePage() {
 
             {/* Main heading with gradient animation */}
             <motion.h1
-              className="mb-6 text-5xl font-light tracking-tight sm:text-6xl lg:text-7xl"
+              className="mb-8 text-5xl font-light tracking-tight sm:text-6xl lg:text-7xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -133,23 +134,36 @@ export default function HomePage() {
               <span className="inline-block">Development</span>
             </motion.h1>
 
-            {/* Subtitle with typewriter effect */}
-            <motion.p
-              className="mx-auto max-w-2xl text-lg text-muted-foreground sm:text-xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              Transition from C++/Java to JavaScript, React, and Next.js with our
-              interactive, hands-on learning platform designed for experienced developers.
-            </motion.p>
+            {/* Terminal Typing Animation */}
+            <div className="mb-12 mx-auto max-w-3xl">
+              <div className="bg-gray-900/95 backdrop-blur rounded-lg border border-gray-700 p-4 md:p-6 shadow-2xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                  <span className="ml-2 text-gray-400 text-xs font-mono">learn.js</span>
+                </div>
+                <TerminalTyping
+                  commands={[
+                    'const skills = await learn.javascript()',
+                    'skills.push("React", "Next.js", "TypeScript")',
+                    'deploy({ knowledge: skills, confidence: 100 })'
+                  ]}
+                  typingSpeed={45}
+                  delayBetweenCommands={600}
+                  prompt="$ "
+                  className="text-sm md:text-base font-mono"
+                />
+              </div>
+            </div>
+
 
             {/* CTA Buttons */}
             <motion.div
               className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
+              transition={{ duration: 0.8, delay: 3 }}
             >
               <MagneticButton className="btn-arcade btn-arcade-primary w-full sm:w-auto inline-flex items-center justify-center gap-2">
                 <Link href="/learn/javascript" className="flex items-center gap-2">
